@@ -15,6 +15,7 @@ class Game {
 
 	start() {
 		new Board();
+		console.log(this.socket);
 	}
 }
 
@@ -22,7 +23,7 @@ class Board {
 	constructor() {
 		this.board = this.create();
 		document.body.appendChild(this.board);
-		this.spawnPieces();
+		this.socket = new WebSocket('ws://localhost:3550')
 	}
 
 	create() {
@@ -33,38 +34,25 @@ class Board {
 		const element = document.createElement('div');
 		element.id = 'board';
 		element.style.backgroundColor = 'darkblue';
-		element.style.border = 'darkblue solid 3px';
 		element.style.width = '900px';
 		element.style.height = '900px';
-		element.style.display = 'grid';
-		element.style.gridTemplateColumns = 'repeat(8, 1fr)';
-		element.style.columnGap = '1px';
-		element.style.rowGap = '1px';
-
-		Array.from({ length: 64 }, () => {
-			let cell = document.createElement('div');
-			cell.className = 'cell';
-			cell.style.position = 'relative';
-			cell.style.backgroundColor = 'skyblue';
-			element.appendChild(cell);
-		});
-
-		container.appendChild(element);
-		return container;
-	}
-
-	spawnPieces() {	
-
+		element.style.position = 'relative';
 		const piece = document.createElement('div')
 		piece.style.backgroundColor = 'black';
 		piece.style.backgroundSize = 'contain';
 		piece.style.position = 'absolute';
-		piece.style.width = '100%';
-		piece.style.height = '100%';
+		piece.style.width = '12.5%';
+		piece.style.height = '12.5%';
+		piece.style.backgroundRepeat = 'no-repeat';
 		piece.style.zIndex = 1;
-		Array.from(document.getElementsByClassName('cell'), (element, id) => {
+
+		Array.from({ length: 32 }, (_, id) => {
 			let p = piece.cloneNode();
-			if (id >= 8 && id <= 15 || id >= 48 && id < 56) element.appendChild(p);
+			p.style.transform = `translate(${id % 8 * 100}%, ${id < 8 ? 0 : id < 16 ? 100 : id < 24 ? 600 : 700}%)`;
+			element.appendChild(p);
 		});
+
+		container.appendChild(element);
+		return container;
 	}
 }
