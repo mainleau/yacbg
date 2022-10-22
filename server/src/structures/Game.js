@@ -8,7 +8,7 @@ class Game {
 
 	add(ws) {
 		this.players.push(ws);
-		ws.send(this.id);
+		ws.send(JSON.stringify({ gameId: this.id, username: 'Player ' + uuid.v4().slice(-3) }))
 	}
 }
 

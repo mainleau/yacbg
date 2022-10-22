@@ -23,7 +23,32 @@ class Board {
 	constructor() {
 		this.board = this.create();
 		document.body.appendChild(this.board);
-		this.socket = new WebSocket('ws://localhost:3550')
+
+		const dashboard = document.createElement('div');
+		dashboard.style.width = '40vh';
+		dashboard.style.height = '90vh';
+		dashboard.style.backgroundColor = 'darkgrey';
+
+		const playerDiv = document.createElement('div');
+
+		const players = document.createElement('span');
+		players.textContent = 'Players';
+		players.style.fontSize = '50px';
+
+		playerDiv.appendChild(players);
+		dashboard.append(playerDiv);
+
+		const playerList = document.createElement('div');
+		playerDiv.appendChild(playerList)
+		document.body.appendChild(dashboard);
+
+		window.socket = this.socket = new WebSocket('ws://localhost:3550');
+
+		this.socket.onmessage = ({ data }) => {
+			const message = document.createElement('span');
+			message.textContent = JSON.parse(data).username;
+			playerList.appendChild(message);
+		}
 	}
 
 	create() {
@@ -34,9 +59,10 @@ class Board {
 		const element = document.createElement('div');
 		element.id = 'board';
 		element.style.backgroundColor = 'darkblue';
-		element.style.width = '900px';
-		element.style.height = '900px';
+		element.style.width = '90vh';
+		element.style.height = '90vh';
 		element.style.position = 'relative';
+
 		const piece = document.createElement('div')
 		piece.style.backgroundColor = 'black';
 		piece.style.backgroundSize = 'contain';
