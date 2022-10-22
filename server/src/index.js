@@ -12,6 +12,7 @@ Server.on('connection', ws => {
 		Games.set(game.id, game);
 	} else {
 		Games.last().add(ws);
+		Games.last().start();
 	}
 	console.log(Games);
 });
